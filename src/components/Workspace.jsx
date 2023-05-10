@@ -1,11 +1,10 @@
 import React from "react";
-import ReactMarkDown from "react-markdown";
 import useMediaQuery from "../useMediaQuery";
 import Back from "./Back";
+import TextareaAutosize from "react-textarea-autosize";
 
-const Workspace = ({ activeNote, onUpdateNote, editMode, onEditMode, setToggleBar }) => {
-
-  const matches = useMediaQuery("(max-width: 740px)");
+const Workspace = ({ activeNote, onUpdateNote, setToggleBar }) => {
+  const matches = useMediaQuery("(max-width: 900px)");
 
   const onEditField = (key, value) => {
     onUpdateNote({
@@ -16,51 +15,37 @@ const Workspace = ({ activeNote, onUpdateNote, editMode, onEditMode, setToggleBa
   };
 
   if (!activeNote)
-    return <div className="no-active-note">
-      {matches && <Back setToggleBar={setToggleBar}/>}
-      No note selected</div>;
+    return (
+      <div className="no-active-note">
+        {matches && <Back setToggleBar={setToggleBar} />}
+        No note selected
+      </div>
+    );
 
   return (
     <div className="app-main">
-            {matches && <Back setToggleBar={setToggleBar}/>}
+      {matches && <Back setToggleBar={setToggleBar} />}
 
-      {editMode && (
-        <div className="app-main-note-edit">
-          <input
-            type="text"
-            id="title"
-            value={activeNote.title}
-            autoFocus={true}
-            onChange={(e) => onEditField("title", e.target.value)}
-          />
+      <div className="app-main-note-edit">
+        <input
+          type="text"
+          id="title"
+          value={activeNote.title}
+          onChange={(e) => onEditField("title", e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          onFocus={(e) => {
+            e.target.value === "Untitle Note" && e.currentTarget.select();
+          }}
+        />
 
-          <textarea
-            id="body"
-            value={activeNote.body}
-            placeholder="Write your note here..."
-            onChange={(e) => onEditField("body", e.target.value)}
-          />
-          <button onClick={onEditMode} className="btn save-btn">Save</button>
-        </div>
-      )}
-
-      {!editMode && (
-        <div className="app-main-note-preview">
-          <h1 onDoubleClick={() => onEditMode()} className="preview-title">
-            {activeNote.title}
-          </h1>
-          <div onDoubleClick={() => onEditMode()}>
-            {activeNote.body && (
-              <ReactMarkDown className="markdown-preview">
-                {activeNote.body}
-              </ReactMarkDown>
-            )}
-            {!activeNote.body && (
-              <p className="markdown-preview">Active edit mode for add note</p>
-            )}
-          </div>
-        </div>
-      )}
+        <TextareaAutosize
+          id="body"
+          value={activeNote.body}
+          placeholder="Write your note here..."
+          onChange={(e) => onEditField("body", e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
     </div>
   );
 };

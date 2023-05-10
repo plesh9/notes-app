@@ -1,36 +1,70 @@
 import React from "react";
 import SearchBox from "./SearchBox ";
-import {AiOutlinePlus} from 'react-icons/ai'
-import {BsTrashFill} from 'react-icons/bs'
-import {RiEditBoxLine} from 'react-icons/ri'
-import { useEffect } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
+import { BsTrashFill } from "react-icons/bs";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
+
 import useMediaQuery from "../useMediaQuery";
+import Modal from "./Modal";
+import { MainBtns } from "./MainBtns";
 
-const Header = ({ onAddNote, activeNote, onDeleteNote, onEditMode, notes ,setActiveNote, activeSearch, setActiveSearch, toggleBar }) => {
-
-  const matches = useMediaQuery("(max-width: 740px)");
+const Header = ({
+  onAddNote,
+  activeNote,
+  onDeleteNote,
+  notes,
+  setActiveNote,
+  activeSearch,
+  setActiveSearch,
+  toggleBar,
+  setToggleBar,
+  setActiveModal,
+  activeModal,
+  switchTheme,
+  theme,
+}) => {
+  const matches = useMediaQuery("(max-width: 900px)");
   return (
     <div className="header">
       <div className="app-sidebar-header">
         <h1>Notes</h1>
-        {!matches && 
-        <div className="header-btns">
-          <button onClick={() => onDeleteNote(activeNote)} className={`header-btn-remove btn-2 ${!activeNote && 'btn-no-active'}`}><BsTrashFill /></button>
-          <button onClick={() => onEditMode()} className={`header-btn-change btn-2 ${!activeNote && 'btn-no-active'}`} ><RiEditBoxLine /></button>
-          <button onClick={() => onAddNote()} className='header-btn-add btn-2'><AiOutlinePlus /></button>
-        </div>}
+        {!matches && (
+          <MainBtns
+            setActiveModal={setActiveModal}
+            onAddNote={onAddNote}
+            activeNote={activeNote}
+          />
+        )}
       </div>
       <div className="header-container">
-      {matches && !activeSearch &&
-        <div className="header-btns">
-          <button onClick={() => onDeleteNote(activeNote)} className={`header-btn-remove btn-2 ${!activeNote && 'btn-no-active'} ${matches && !toggleBar && 'btn-no-active'}`}><BsTrashFill /></button>
-          <button onClick={() => onEditMode()} className={`header-btn-change btn-2 ${!activeNote && 'btn-no-active'} ${matches && !toggleBar && 'btn-no-active'}`} ><RiEditBoxLine /></button>
-          <button onClick={() => onAddNote()} className='header-btn-add btn-2'><AiOutlinePlus /></button>
-        </div>}
-        <SearchBox notes={notes} activeNote={activeNote} setActiveNote={setActiveNote}  activeSearch={activeSearch}
-        setActiveSearch={setActiveSearch} />
-        
+        {matches && !activeSearch && (
+          <MainBtns
+            setActiveModal={setActiveModal}
+            onAddNote={onAddNote}
+            activeNote={activeNote}
+            toggleBar={toggleBar}
+          />
+        )}
+        <SearchBox
+          notes={notes}
+          activeNote={activeNote}
+          setActiveNote={setActiveNote}
+          activeSearch={activeSearch}
+          setActiveSearch={setActiveSearch}
+          setToggleBar={setToggleBar}
+        />
+        <button onClick={switchTheme} className={`btn btn-theme`}>
+          {theme === "light" && <MdLightMode />}
+          {theme === "dark" && <MdDarkMode />}
+        </button>
       </div>
+      <Modal
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        onDeleteNote={onDeleteNote}
+        activeNote={activeNote}
+        setActiveSearch={setActiveSearch}
+      />
     </div>
   );
 };

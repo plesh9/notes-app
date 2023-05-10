@@ -5,13 +5,13 @@ import useMediaQuery from "../useMediaQuery";
 
 const SearchBox = ({
   notes,
-  activeNote,
   setActiveNote,
   activeSearch,
   setActiveSearch,
+  setToggleBar,
 }) => {
-  const matches = useMediaQuery("(max-width: 740px)");
-  const focusInput = React.createRef()
+  const matches = useMediaQuery("(max-width:900px)");
+  const focusInput = React.createRef();
 
   const [text, setText] = useState("");
   const [filterNotes, setFilterNotes] = useState("notes");
@@ -38,22 +38,19 @@ const SearchBox = ({
     document.body.addEventListener("click", removeClass);
     return () => document.body.removeEventListener("click", removeClass);
   });
-  const onClickSearch = (e) =>{
+  const onClickSearch = (e) => {
     setActiveSearch((prevState) => !prevState);
-    // e.currentTarget.children[0].focus()
-    !activeSearch && focusInput.current.focus()
-  }
+    !activeSearch && focusInput.current.focus();
+  };
   return (
     <div
-      className={`search-box ${activeSearch && "search-box-active"}`}
-      onClick={
-        !matches ? onClickSearch : null
-      }
+      className={`search-box ${activeSearch ? "search-box-active" : ""}`}
+      onClick={!matches ? onClickSearch : null}
     >
       <input
-        autoFocus={matches} 
+        autoFocus={matches}
         ref={focusInput}
-        className={`${matches && activeSearch ? "search-input-active" : ''}`}
+        className={`${matches && activeSearch ? "search-input-active" : ""}`}
         type="text"
         value={text}
         onChange={(e) => {
@@ -63,10 +60,8 @@ const SearchBox = ({
         placeholder="Search"
       />
       <button
-        onClick={
-          matches ? onClickSearch : null
-        }
-        className="search-box-btn btn"
+        onClick={matches ? onClickSearch : null}
+        className="search-box-btn btn-2"
       >
         <CiSearch />
       </button>
@@ -75,10 +70,11 @@ const SearchBox = ({
           {filterNotes.map((note) => {
             return (
               <li
-              key={note.id}
+                key={note.id}
                 onClick={() => {
                   setActiveNote(note.id);
                   matches && setActiveSearch(false);
+                  setToggleBar(true);
                 }}
                 className="search-item"
               >

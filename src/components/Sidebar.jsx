@@ -1,44 +1,17 @@
-import React from 'react'
-import { useState } from 'react';
-import useMediaQuery from '../useMediaQuery';
+import React from "react";
+import ListItem from "./List-item";
 
-const Sidebar = ({ notes, setActiveNote, activeNote, setEditMode, toggleBar, setToggleBar }) => {
-    const matches = useMediaQuery("(max-width: 740px)");
+const Sidebar = (props) => {
 
 
-    const sordeNotes = notes.sort((a, b) => b.lastModified - a.lastModified)
-    const onClickNote = (id) =>{
-        setActiveNote(id)
-        setEditMode(false)
-        matches && setToggleBar(true)
-    }
+  return (
+    <div className={`app-sidebar ${props.toggleBar ? "sidebar--isHidden" : ""}`}>
 
-    return (
-        <div className={`app-sidebar ${ toggleBar ? 'sidebar--isHidden' : '' }`}>
-            <div className="app-sidebar-notes">
-                {sordeNotes.map((note) => (
-                    <div key={note.id} 
-                        className={`app-sidebar-note ${!matches && note.id === activeNote ? 'active' : ''}`} 
-                        onClick={() => onClickNote(note.id) }>
-                        
-                        <div className="sidebar-note-title">
-                            <strong>{note.title}</strong>
-                        </div>
+      {props.notes.length === 0 && <div className="no-note">No notes</div>}
+      
+      <ListItem {...props} />
+    </div>
+  );
+};
 
-                        <p>{note.body && note.body.substr(0, 70) + '...'}</p>
-                        
-                        <small className='note-meta'>
-                            Last modified {new Date(note.lastModified).toLocaleDateString('en-GB', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}
-                        </small>
-
-                    </div>
-                ))}
-            </div>
-        </div>
-    )
-}
-
-export default Sidebar
+export default Sidebar;
