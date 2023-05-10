@@ -6,7 +6,7 @@ import { MdDarkMode, MdLightMode } from "react-icons/md";
 
 import useMediaQuery from "../useMediaQuery";
 import Modal from "./Modal";
-import { MainBtns } from "./MainBtns";
+import { MainBtns, MobileMainBtns } from "./MainBtns";
 
 const Header = ({
   onAddNote,
@@ -38,7 +38,7 @@ const Header = ({
       </div>
       <div className="header-container">
         {matches && !activeSearch && (
-          <MainBtns
+          <MobileMainBtns
             setActiveModal={setActiveModal}
             onAddNote={onAddNote}
             activeNote={activeNote}
